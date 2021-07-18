@@ -2,25 +2,28 @@ header {
     background: rgba(0,0,0,0.9);
     width: 100%;
     position: fixed;
-    z-index: 100;
+    z-index: 1;
 }
 
 .contenido {
     padding-top: 80px;
 }
 
-.header-video {
-   position: absolute;
+/*.header-video {
+   position: relative;
    top: 0;
    left: 0;
-   width: 100%;
-   height: 100%;
+   width: 50%;
+   height: 50%;
    overflow: hidden;
-   z-index: 1;
-   opacity: .80;
 }
 
 .header-video video{
-    min-width: 100%;
-    min-height: 100%;
+    min-width: 50%;
+    min-height: 50%;
 }
+
+#formulario_Login{
+    z-index: 1;
+    opacity: .80;
+}*/

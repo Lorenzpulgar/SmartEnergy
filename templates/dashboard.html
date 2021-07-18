@@ -6,6 +6,78 @@
         <div class="col-md-12 py-0">
            <h1 class="text-center"><strong>Consumo total(Tiempo real)</strong></h1>
        </div>
+    <div class="col-md-12 py-0 border border-dark">
+        <h1 class="text-center"><strong>Consumo Kwh</strong></h1>
+        <h2>1kwh: 1kw*1h</h2>
+        <div>
+            <canvas id="Consumo kwh"></canvas>
+        </div>
+        <script>
+            Chart.defaults.global.responsive = true;
+            Chart.defaults.global.legend.display = false;
+        
+            var chartData = {
+                labels : [{% for dato in [1,2,3,4,5,6,7,8,9] %}
+                       "{{ dato }}",
+                      {% endfor %}],
+                datasets : [{
+                    label: 'Kwh',
+                    fill: true,
+                    lineTension: 0.1,
+                    backgroundColor: "rgba(114,147,203,0.2)",
+                    borderColor: "rgba(57,106,177,1)",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'mister',
+                    pointBorderColor: "rgba(57,106,177,1)",
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(57,106,177,1)",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    data : [{% for dato in [2,3,4,5,6,6,7,8,9] %}
+                            {{ dato }},
+                        {% endfor %}],
+                    spanGaps: false
+                }]
+            }
+                
+            var ctx = document.getElementById("Consumo kwh").getContext("2d");
+        
+            var ejemplo1 = new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: {
+                    responsive: true,
+                        legend: {
+                            labels: {
+                                usePointStyle: false
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 't(seg)'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Kwh'
+                            }
+                        }]
+                    },
+                }
+            });
+        </script>  
+    </div>
        <div class="col-md-6 py-0 border border-dark">
             <h1 class="text-center"><strong>Corriente</strong></h1>
             <h2>Corriente: 3A</h2>
