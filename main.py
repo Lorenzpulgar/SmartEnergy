@@ -14,5 +14,13 @@ def registro():
 def monitoreo():
     return render_template('dashboard.html')
 
+@app.route('/carga1')
+def carga1():
+    return render_template('carga1.html')
+
+@app.route('/carga2')
+def carga2():
+    return render_template('carga2.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
