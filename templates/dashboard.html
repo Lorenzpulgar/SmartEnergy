@@ -2,15 +2,14 @@
 {% block body %}
 
 <div class="contenido pb-4 pt-4"> 
-    <div class="row border border-dark">
+    <div class="row border border-dark ">
         <div class="col-md-12 py-0">
            <h1 class="text-center"><strong>Consumo total(Tiempo real)</strong></h1>
        </div>
-    <div class="col-md-12 py-0 border border-dark">
+    <div class="col-md-6 py-0 border border-dark ">
         <h1 class="text-center"><strong>Consumo Kwh</strong></h1>
-        <h2>1kwh: 1kw*1h</h2>
         <div>
-            <canvas id="Consumo kwh"></canvas>
+            <canvas id="Consumo kwh" width="550" height="500"></canvas>
         </div>
         <script>
             Chart.defaults.global.responsive = true;
@@ -39,7 +38,7 @@
                     pointHoverBorderWidth: 2,
                     pointRadius: 1,
                     pointHitRadius: 10,
-                    data : [{% for dato in [2,3,4,5,6,6,7,8,9] %}
+                    data : [{% for dato in [2,3,4,5,6,6,7,8,9,10,11,12,13,14,15,16] %}
                             {{ dato }},
                         {% endfor %}],
                     spanGaps: false
@@ -79,10 +78,10 @@
         </script>  
     </div>
        <div class="col-md-6 py-0 border border-dark">
-            <h1 class="text-center"><strong>Corriente</strong></h1>
-            <h2>Corriente: 3A</h2>
+            <div class="row border border-dark">
+                <h1><strong>Corriente: 3A</strong></h1>
             <div>
-                <canvas id="corriente"></canvas>
+                <canvas id="corriente" width="350" height="20"></canvas>
             </div>
 
             <script>
@@ -151,9 +150,8 @@
                 });
             </script>  
         </div>
-        <div class="col-md-6 py-0 border border-dark">
-            <h1 class="text-center"><strong>Potencia</strong></h1>
-            <h2>Potencia: 240W</h2>
+        <div class="row border border-dark ">
+            <h3>Potencia: 240W</h3>
             <div>
                 <canvas id="potencia"></canvas>
             </div>
@@ -182,10 +180,10 @@
                         pointHoverRadius: 5,
                         pointHoverBackgroundColor: "rgba(57,106,177,1)",
                         pointHoverBorderColor: "rgba(220,220,220,1)",
-                        pointHoverBorderWidth: 2,
+                        pointHoverBorderWidth: 1,
                         pointRadius: 1,
                         pointHitRadius: 10,
-                        data : [{% for dato in [2,3,4,5,6,6,7,8,9] %}
+                        data : [{% for dato in [2,3,4,5,6,7,8,9] %}
                                 {{ dato }},
                             {% endfor %}],
                         spanGaps: false
@@ -223,7 +221,9 @@
                     }
                 });
             </script>  
-        </div>
+
+        </div>    
+       </div>
         <div class="col-md-12 py-0 border border-dark text-center">
             <button type="button" class="btn btn-primary">Registro Mensual</button>
         </div>
