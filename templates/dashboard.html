@@ -1,240 +1,268 @@
 {% extends 'layout.html' %}
 {% block body %}
 
-<div class="contenido pb-4 pt-4"> 
-<div class="row border border-dark ">
-        <div class="col-md-12 py-0">
-           <h1 class="text-center"><strong>Consumo total (real time)</strong></h1>
-       </div>
-    <div class="col-md-6 py-0 border border-dark ">
-        <h4 class="text-center">Consumo Kwh</h4>
-        <div>
-            <canvas id="Consumo kwh" width="500" height="600"></canvas>
+<div class="container pt-4"> 
+    <div class="row">
+         <div class="col-md-12 pt-4 pb-4">
+            <h3 class="text-center"><strong>Consumo total (real time)</strong></h3>
         </div>
-        <script>
-            Chart.defaults.global.responsive = true;
-            Chart.defaults.global.legend.display = false;
-        
-            var chartData = {
-                labels : [{% for dato in [1,2,3,4,5,6,7,8,9] %}
-                       "{{ dato }}",
-                      {% endfor %}],
-                datasets : [{
-                    label: 'Kwh',
-                    fill: true,
-                    lineTension: 0.1,
-                    backgroundColor: "rgba(114,147,203,0.2)",
-                    borderColor: "rgba(57,106,177,1)",
-                    borderCapStyle: 'butt',
-                    borderDash: [],
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'mister',
-                    pointBorderColor: "rgba(57,106,177,1)",
-                    pointBackgroundColor: "#fff",
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "rgba(57,106,177,1)",
-                    pointHoverBorderColor: "rgba(220,220,220,1)",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 1,
-                    pointHitRadius: 10,
-                    data : [{% for dato in [2,3,4,5,6,6,7,8,9,10,11,12,13,14,15,16] %}
-                            {{ dato }},
-                        {% endfor %}],
-                    spanGaps: false
-                }]
-            }
-                
-            var ctx = document.getElementById("Consumo kwh").getContext("2d");
-        
-            var ejemplo1 = new Chart(ctx, {
-                type: 'line',
-                data: chartData,
-                options: {
-                    responsive: true,
-                        legend: {
-                            labels: {
-                                usePointStyle: false
+        <div class="col-md-6 pt-4 pb-4">
+            <h4 class="text-center">Fecha vs Corriente</h4>
+            <div class="card"> 
+                <div class="card-body"> 
+                    <canvas id="numero1" width="500" height="400"></canvas>
+                </div> 
+            </div> 
+        </div>
+        <div class="col-md-6 pt-4 pb-4">
+            <h4 class="text-center">Fecha vs Potencia</h4>
+            <div class="card"> 
+                <div class="card-body"> 
+                    <canvas id="numero2" width="500" height="400"></canvas>
+                </div> 
+            </div> 
+        </div>
+        <div class="col-md-6 pt-4 pb-4">
+            <h4 class="text-center">Fecha vs Consumo Kwh</h4>
+            <div class="card"> 
+                <div class="card-body"> 
+                    <canvas id="numero3" width="500" height="400"></canvas>
+                </div> 
+            </div> 
+        </div>
+        <div class="col-md-6 pt-4 pb-4">
+            <h4 class="text-center">Acciones</h4>
+            <div class="card"> 
+                <div class="card-body"> 
+                    <div class="col-md-12 py-4 text-center">
+                        <a type="button" class="btn btn-primary" href="/carga1">Carga #1</a>
+                    </div>
+                    <div class="col-md-12 py-4 text-center">
+                        <a type="button" class="btn btn-primary" href="/carga2">Carga #2</a>
+                    </div>
+                    <div class="col-md-12 py-4 text-center">
+                        <a type="button" class="btn btn-primary" href="/dashboard">Consumo total</a>
+                    </div>
+                    <div class="col-md-12 py-4 text-center">
+                        <a type="button" class="btn btn-primary">Registro diario</a>
+                        <a type="button" class="btn btn-primary">Registro semanal</a>
+                        <a type="button" class="btn btn-primary">Registro mensual</a>
+                    </div>
+                </div> 
+            </div> 
+        </div>
+    </div>
+</div>
+
+<!--suppress JSUnresolvedLibraryURL -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+<!-- Corriente -->
+<script>
+    Chart.defaults.global.responsive = true;
+    Chart.defaults.global.legend.display = false;
+
+    $(document).ready(function () {
+        const config = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: "Corriente",
+                    backgroundColor: "rgb(132,186,91,0.2)",
+                    borderColor: "rgb(62,150,81,1)",
+                    data: [],
+                    fill: false,
+                }],
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Fecha de adquisición'
                         }
-                    },
-                    scales: {
-                        xAxes: [{
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
                             display: true,
-                            scaleLabel: {
-                                display: true,
-                                labelString: 't(seg)'
-                            }
-                        }],
-                        yAxes: [{
-                            display: true,
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Kwh'
-                            }
-                        }]
-                    },
-                }
-            });
-        </script>  
-    </div>
-    <div class="col-md-6 py-0 border border-dark">
-        <div class="row border border-dark">
-                <h4 class="text-center">Corriente: 3A</h4><br>
-            <div>
-                <canvas id="corriente" width="550" height="300"></canvas>
-            </div>
-
-            <script>
-                Chart.defaults.global.responsive = true;
-                Chart.defaults.global.legend.display = false;
-            
-                var chartData = {
-                    labels : [{% for dato in [1,2,3,4,5,6,7,8,9] %}
-                           "{{ dato }}",
-                          {% endfor %}],
-                    datasets : [{
-                        label: 'Amperios',
-                        fill: true,
-                        lineTension: 0.1,
-                        backgroundColor: "rgba(114,147,203,0.2)",
-                        borderColor: "rgba(57,106,177,1)",
-                        borderCapStyle: 'butt',
-                        borderDash: [],
-                        borderDashOffset: 0.0,
-                        borderJoinStyle: 'mister',
-                        pointBorderColor: "rgba(57,106,177,1)",
-                        pointBackgroundColor: "#fff",
-                        pointBorderWidth: 1,
-                        pointHoverRadius: 5,
-                        pointHoverBackgroundColor: "rgba(57,106,177,1)",
-                        pointHoverBorderColor: "rgba(220,220,220,1)",
-                        pointHoverBorderWidth: 2,
-                        pointRadius: 1,
-                        pointHitRadius: 10,
-                        data : [{% for dato in [2,3,4,5,6,6,7,8,9] %}
-                                {{ dato }},
-                            {% endfor %}],
-                        spanGaps: false
+                            labelString: 'Unidad'
+                        }
                     }]
                 }
-                    
-                var ctx = document.getElementById("corriente").getContext("2d");
-            
-                var ejemplo1 = new Chart(ctx, {
-                    type: 'line',
-                    data: chartData,
-                    options: {
-                        responsive: true,
-                            legend: {
-                                labels: {
-                                    usePointStyle: false
-                            }
-                        },
-                        scales: {
-                            xAxes: [{
-                                display: true,
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 't(seg)'
-                                }
-                            }],
-                            yAxes: [{
-                                display: true,
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'A'
-                                }
-                            }]
-                        },
-                    }
-                });
-            </script>  
-        </div>
-        <div class="row border border-dark ">
-            <h4 class="text-center">Potencia: 240W</h4><br>
-            <div>
-                <canvas id="potencia"  width="550" height="350"></canvas>
-            </div>
+            }
+        };
 
-            <script>
-                Chart.defaults.global.responsive = true;
-                Chart.defaults.global.legend.display = false;
-            
-                var chartData = {
-                    labels : [{% for dato in [1,2,3,4,5,6,7,8,9] %}
-                           "{{ dato }}",
-                          {% endfor %}],
-                    datasets : [{
-                        label: 'Watt',
-                        fill: true,
-                        lineTension: 0.1,
-                        backgroundColor: "rgba(114,147,203,0.2)",
-                        borderColor: "rgba(57,106,177,1)",
-                        borderCapStyle: 'butt',
-                        borderDash: [],
-                        borderDashOffset: 0.0,
-                        borderJoinStyle: 'mister',
-                        pointBorderColor: "rgba(57,106,177,1)",
-                        pointBackgroundColor: "#fff",
-                        pointBorderWidth: 1,
-                        pointHoverRadius: 5,
-                        pointHoverBackgroundColor: "rgba(57,106,177,1)",
-                        pointHoverBorderColor: "rgba(220,220,220,1)",
-                        pointHoverBorderWidth: 1,
-                        pointRadius: 1,
-                        pointHitRadius: 10,
-                        data : [{% for dato in [2,3,4,5,6,7,8,9] %}
-                                {{ dato }},
-                            {% endfor %}],
-                        spanGaps: false
+        const context = document.getElementById('corriente_total').getContext('2d');
+
+        const lineChart = new Chart(context, config);
+
+        const source = new EventSource("/datos_monitoreo");
+
+        source.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+
+            if (config.data.labels.length == 5) {
+                config.data.labels.shift();
+                config.data.datasets[0].data.shift();
+            }
+
+            config.data.labels.push(data.fecha);
+            config.data.datasets[0].data.push(data.corriente_total);
+            lineChart.update();
+        }
+    });
+</script>
+
+
+<!-- Potencia -->
+<script>
+    $(document).ready(function () {
+        const config = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: "Potencia",
+                    backgroundColor: "rgb(211,94,96,0.2)",
+                    borderColor: "rgb(204,37,41,1)",
+                    data: [],
+                    fill: false,
+                }],
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Fecha de adquisición'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Unidad'
+                        }
                     }]
                 }
-                    
-                var ctx = document.getElementById("potencia").getContext("2d");
-            
-                var ejemplo1 = new Chart(ctx, {
-                    type: 'line',
-                    data: chartData,
-                    options: {
-                        responsive: true,
-                            legend: {
-                                labels: {
-                                    usePointStyle: false
-                            }
-                        },
-                        scales: {
-                            xAxes: [{
-                                display: true,
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 't(seg)'
-                                }
-                            }],
-                            yAxes: [{
-                                display: true,
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'W'
-                                }
-                            }]
-                        },
-                    }
-                });
-            </script>  
-        </div>    
-    </div>
-        <div class="col-md-12 py-2 border border-dark text-center">
-            <a type="button" class="btn btn-primary" href="/dashboard">Consumo total</a>
-            <a type="button" class="btn btn-primary" href="/carga1">Carga #1</a>
-            <a type="button" class="btn btn-primary" href="/carga2">Carga #2</a>
-        </div>
-        <div class="col-md-12 py-2 border border-dark text-center">
-            <a type="button" class="btn btn-primary">Registro diario</a>
-            <a type="button" class="btn btn-primary">Registro semanal</a>
-            <a type="button" class="btn btn-primary">Registro mensual</a>
-        </div>
-</div>
-</div>
-<br><br>
+            }
+        };
+
+        const context = document.getElementById('potencia_total').getContext('2d');
+
+        const lineChart = new Chart(context, config);
+
+        const source = new EventSource("/datos_monitoreo");
+
+        source.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+
+            if (config.data.labels.length == 5) {
+                config.data.labels.shift();
+                config.data.datasets[0].data.shift();
+            }
+
+            config.data.labels.push(data.fecha);
+            config.data.datasets[0].data.push(data.potencia_total);
+            lineChart.update();
+        }
+    });
+</script>
+
+<!-- Consumo kwh -->
+<script>
+    $(document).ready(function () {
+        const config = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: "Consumo kwh",
+                    backgroundColor: "rgb(211,94,96,0.2)",
+                    borderColor: "rgb(204,37,41,1)",
+                    data: [],
+                    fill: false,
+                }],
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Fecha de adquisición'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Unidad'
+                        }
+                    }]
+                }
+            }
+        };
+
+        const context = document.getElementById('consumo_total').getContext('2d');
+
+        const lineChart = new Chart(context, config);
+
+        const source = new EventSource("/datos_monitoreo");
+
+        source.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+
+            if (config.data.labels.length == 5) {
+                config.data.labels.shift();
+                config.data.datasets[0].data.shift();
+            }
+
+            config.data.labels.push(data.fecha);
+            config.data.datasets[0].data.push(data.consumo_total);
+            lineChart.update();
+        }
+    });
+</script>
 
 {% endblock %}

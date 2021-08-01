@@ -1,9 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, Response, stream_with_context
 from flaskext.mysql import MySQL
-import mysql.connector
-import paho.mqtt.client as mqtt
-import json
-import subprocess
 from decouple import config
 import json
 
@@ -21,11 +17,20 @@ mysql.init_app(app)
 
 def _datos(cur):
     cur.execute(
-        'SELECT fecha_adquisicion, numero1, numero2 FROM datos_tiempo_real WHERE id = (SELECT MAX(id) FROM datos_tiempo_real)')
-    datos_tiempo_real = cur.fetchall()
+        'SELECT fecha1, corriente1, potencia1, consumo1 FROM datos_tiempo_real1 WHERE id = (SELECT MAX(id) FROM datos_tiempo_real1)')
+    datos_tiempo_real1 = cur.fetchall()
+
+    cur.execute(
+        'SELECT fecha2, corriente2, potencia2, consumo2 FROM datos_tiempo_real2 WHERE id = (SELECT MAX(id) FROM datos_tiempo_real2)')
+    datos_tiempo_real2 = cur.fetchall()
 
     json_data = json.dumps(
-        {'fecha': datos_tiempo_real[0][0], 'numero1': datos_tiempo_real[0][1], 'numero2': datos_tiempo_real[0][2]})
+        {
+            'fecha1': datos_tiempo_real1[0][0], 'corriente1': datos_tiempo_real1[0][1], 
+            'potencia1': datos_tiempo_real1[0][2], 'consumo1': datos_tiempo_real1[0][3],
+            'fecha2': datos_tiempo_real2[1][0], 'corriente2': datos_tiempo_real2[1][1], 
+            'potencia2': datos_tiempo_real2[1][2], 'consumo2': datos_tiempo_real2[1][3]
+        })
 
     yield f"data:{json_data}\n\n"
 
@@ -57,48 +62,6 @@ def datos_monitoreo():
 
     return Response(stream_with_context(enviar), mimetype='text/event-stream')
 
-## Guardar MQTT
-def conectarDB():
-    mydb = mysql.connector.connect(
-        host='localhost',
-        user=config('USER_DB'),
-        password=config('PASSWORD_DB'),
-        database=config('NAME_DB')
-    )
-
-    return mydb
-
-
-def guardarDB(mydb, valores):
-    cur = mydb.cursor()
-    cur.execute('INSERT INTO datos_tiempo_real (fecha_adquisicion, numero1, numero2) VALUES ("{fecha_adquisicion}", {numero1}, {numero2})'.format(
-        fecha_adquisicion=valores['fecha'], numero1=valores['numero1'], numero2=valores['numero2']))
-
-
-def cargarDB(valores):
-    mydb = conectarDB()
-    guardarDB(mydb, valores)
-
-## Recibir MQTT
-def on_connect(client, userdata, flags, rc):
-    print("Connected with result code " + str(rc))
-    client.subscribe("sensor_corriente")
-    #mqtt.subscribe("sensor_corriente")
-
-def on_message(client, userdata, msg):
-    valores_json = str(msg.payload, 'utf-8')
-    valores = json.loads(valores_json)
-    cargarDB(valores)
-    print(valores)
-
-def run():
-    client = mqtt.Client()
-    client.on_connect = on_connect
-    client.on_message = on_message
-    client.connect("test.mosquitto.org", 1883, 60)
-    client.loop_forever()
-
 if __name__ == '__main__':
-    run()
     app.run(debug=True)
     
