@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, Response, stream_with_context
 from flaskext.mysql import MySQL
 from decouple import config
+import random
 import json
+import time
 
 
 app = Flask(__name__)
@@ -20,19 +22,20 @@ def _datos(cur):
         'SELECT fecha1, corriente1, potencia1, consumo1 FROM datos_tiempo_real1 WHERE id = (SELECT MAX(id) FROM datos_tiempo_real1)')
     datos_tiempo_real1 = cur.fetchall()
 
-    cur.execute(
-        'SELECT fecha2, corriente2, potencia2, consumo2 FROM datos_tiempo_real2 WHERE id = (SELECT MAX(id) FROM datos_tiempo_real2)')
-    datos_tiempo_real2 = cur.fetchall()
-
-    json_data = json.dumps(
-        {
+    json_data = json.dumps({
             'fecha1': datos_tiempo_real1[0][0], 'corriente1': datos_tiempo_real1[0][1], 
             'potencia1': datos_tiempo_real1[0][2], 'consumo1': datos_tiempo_real1[0][3],
-            'fecha2': datos_tiempo_real2[1][0], 'corriente2': datos_tiempo_real2[1][1], 
-            'potencia2': datos_tiempo_real2[1][2], 'consumo2': datos_tiempo_real2[1][3]
         })
+ 
+    return f"data:{json_data}\n\n"
 
-    yield f"data:{json_data}\n\n"
+@app.route('/datos_monitoreo')
+def datos_monitoreo():
+    cur = mysql.get_db().cursor()
+
+    enviar = _datos(cur)
+
+    return Response(stream_with_context(enviar), mimetype='text/event-stream')
 
 @app.route('/')
 def login():
@@ -53,14 +56,6 @@ def carga1():
 @app.route('/carga2')
 def carga2():
     return render_template('carga2.html')
-
-@app.route('/datos_monitoreo')
-def datos_monitoreo():
-    cur = mysql.get_db().cursor()
-
-    enviar = _datos(cur)
-
-    return Response(stream_with_context(enviar), mimetype='text/event-stream')
 
 if __name__ == '__main__':
     app.run(debug=True)
