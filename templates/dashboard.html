@@ -7,26 +7,26 @@
             <h3 class="text-center"><strong>Consumo total (real time)</strong></h3>
         </div>
         <div class="col-md-6 pt-4 pb-4">
-            <h4 class="text-center">Fecha vs Corriente</h4>
+            <h4 class="text-center">Hora vs Corriente</h4>
             <div class="card"> 
                 <div class="card-body"> 
-                    <canvas id="numero1" width="500" height="400"></canvas>
+                    <canvas id="corriente_total" width="500" height="400"></canvas>
                 </div> 
             </div> 
         </div>
         <div class="col-md-6 pt-4 pb-4">
-            <h4 class="text-center">Fecha vs Potencia</h4>
+            <h4 class="text-center">Hora vs Potencia</h4>
             <div class="card"> 
                 <div class="card-body"> 
-                    <canvas id="numero2" width="500" height="400"></canvas>
+                    <canvas id="potencia_total" width="500" height="400"></canvas>
                 </div> 
             </div> 
         </div>
         <div class="col-md-6 pt-4 pb-4">
-            <h4 class="text-center">Fecha vs Consumo Kwh</h4>
+            <h4 class="text-center">Hora vs Consumo Kwh</h4>
             <div class="card"> 
                 <div class="card-body"> 
-                    <canvas id="numero3" width="500" height="400"></canvas>
+                    <canvas id="consumo_total" width="500" height="400"></canvas>
                 </div> 
             </div> 
         </div>
@@ -121,7 +121,7 @@
                 config.data.datasets[0].data.shift();
             }
 
-            config.data.labels.push(data.fecha);
+            config.data.labels.push(data.fecha_total);
             config.data.datasets[0].data.push(data.corriente_total);
             lineChart.update();
         }
@@ -190,7 +190,7 @@
                 config.data.datasets[0].data.shift();
             }
 
-            config.data.labels.push(data.fecha);
+            config.data.labels.push(data.fecha_total);
             config.data.datasets[0].data.push(data.potencia_total);
             lineChart.update();
         }
@@ -258,7 +258,7 @@
                 config.data.datasets[0].data.shift();
             }
 
-            config.data.labels.push(data.fecha);
+            config.data.labels.push(data.fecha_total);
             config.data.datasets[0].data.push(data.consumo_total);
             lineChart.update();
         }
