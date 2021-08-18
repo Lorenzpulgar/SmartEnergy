@@ -1,35 +1,120 @@
 {% extends 'layout.html' %}
+
 {% block body %}
 
-<div class="contenido pb-4 pt-4"> 
-    <div class="row">
-         <div class="col-md-12 pt-4 pb-4">
-            <h1 class="text-center"><strong>Iniciar sesión</strong></h1>
-        </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4 pt-4 pb-4 ml-auto mr-auto"  id="formulario_Login" >
-        <form action="/login" method="post">
-          <div class="form-group">
-            <label for="exampleInputEmail1">Correo</label>
-            <input type="email" class="form-control" name="correo" placeholder="Correo">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">Contraseña</label>
-            <input type="password" class="form-control" name="contrasena" placeholder="Contraseña">
-          </div>
-          <button type="submit" class="btn btn-primary">Ingresar</button>
-          <div class="py-4">
-            ¿No tienes cuenta? 
-            <a class="nav-link" href="/registro"><b>Regístrate</b></a>
-          </div>  
-        </form>
+
+
+<style>
+  .father {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .child {
+  
+    width: 400px;
+    border: rgb(235, 233, 233) solid 2px;
+    padding: 20px;
+    box-shadow: 1px 1px 5px rgb(235, 232, 232);
+
+  }
+
+  .pa{
+
+
+    display: inline;
+  }
+</style>
+
+
+
+<div class="father">
+
+  <div class="child">
+   
+   
+      {% with messages = get_flashed_messages(category_filter=['exito']) %}
+      {% if messages %}
+
+
+      {% for message in messages %}
+
+      <div class="alert alert-dismissible alert-success">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>{{message}}</strong>
       </div>
+
+      {% endfor %}
+
+
+
+      {% endif %}
+      {% endwith %}
+
+      {% with messages = get_flashed_messages(category_filter=['error']) %}
+      {% if messages %}
+
+
+      {% for message in messages %}
+
+
+      <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>{{message}}</strong>
+      </div>
+
+      {% endfor %}
+
+
+
+      {% endif %}
+      {% endwith %}
+
+
+      <h3 class="text-center">INICIAR SESIÓN</h3>
+      <form action="{{url_for('iniciarsesion')}}" method="POST">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label mt-2">Usuario</label>
+          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name='nombre'
+            placeholder="Usuario">
+
+        </div>
+
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label mt-2">Contraseña</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" name='clave' placeholder='Contraseña'>
+        </div>
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" name='recordar'>
+          <label class="form-check-label fs-6" for="exampleCheck1">Recuérdame</label>
+        </div>
+        <div class="mb-2">
+          <p class="pa">No tienes una cuenta?</p> <a href="{{url_for('registro')}}" class="aRegister">Registrate</a>
+        </div>
+
+        <div class=" mb-4">
+          <a href="#" class="aForget">¿Has olvidado la contraseña?</a>
+        </div>
+
+        <div class="text-center">
+
+          <button type="submit" class="btn btn-primary">Ingresar</button>
+
+        </div>
+
+
+      </form>
+
+
     </div>
+   
+
+    
+  </div>
+
+
 </div>
 
-{% if (msg): %}
-  <script>alert('{{ msg }}')</script>
-{% endif %}
 {% endblock %}
 

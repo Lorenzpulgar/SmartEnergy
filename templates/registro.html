@@ -1,39 +1,109 @@
 {% extends 'layout.html' %}
+
 {% block body %}
 
-<div class="contenido pb-4 pt-4"> 
-    <div class="row">
-         <div class="col-md-12 pt-4 pb-4">
-            <h1 class="text-center"><strong>Regístrate</strong></h1>
-          </div>
+<style>
+  .father {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .child {
+  
+    width: 400px;
+    border: rgb(235, 233, 233) solid 2px;
+    padding: 20px;
+    box-shadow: 1px 1px 5px rgb(235, 232, 232);
+
+  }
+  .pa{
+
+    display: inline;
+  }
+</style>
+
+
+<div class="father">
+  <div class="child">
+    <h3 class="text-center">CREAR CUENTA</h3>
+
+    {% with messages = get_flashed_messages(category_filter=['error']) %}
+    {% if messages %}
+
+
+    {% for message in messages %}
+
+
+    <div class="alert alert-dismissible alert-danger">
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      <strong>{{ message }}</strong>
     </div>
-    <div class="row">
-      <div class="col-md-4 pt-4 pb-4 ml-auto mr-auto">
-        <form action="/registro" method="post">
-            <div class="form-group">
-              <label for="exampleInputPassword1">Nombre</label>
-              <input type="text" class="form-control" name="nombre" placeholder="Nombre">
-            </div>
-            <div class="form-group">
-              <label for="exampleInputEmail1">Correo</label>
-              <input type="email" class="form-control" name="correo" placeholder="Correo">
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Contraseña</label>
-              <input type="password" class="form-control" name="contrasena" placeholder="Contraseña">
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Teléfono</label>
-              <input type="text" class="form-control" name="tel" placeholder="Teléfono">
-            </div>
-            <button type="submit" class="btn btn-primary">Regístrate</button>
-            <div class="py-4">
-              ¿Ya tienes una cuenta? <a class="nav-link text-black" href="/"><b>Iniciar sesión</b></a>
-            </div>
-            
-          </form>
+
+    {% endfor %}
+
+
+
+    {% endif %}
+    {% endwith %}
+
+
+    <form action="{{url_for('registro')}}" method="POST">
+
+      <div class="form-group1">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label mt-2">Usuario</label>
+          <input type="text" class="form-control" id="inputValid1" aria-describedby="emailHelp" name='nombre'
+            placeholder="Usuario">
+        </div>
+
+
       </div>
-    </div>
+
+      <div class="form-group2">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label mt-2">Correo electronico</label>
+          <input type="email" class="form-control" id="inputValid2" aria-describedby="emailHelp" name='email'
+            placeholder="Correo Electronico">
+        </div>
+
+      </div>
+      <div class="form-group3">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label mt-2">Telefono</label>
+          <input type="text" class="form-control" id="inputValid2" aria-describedby="emailHelp" name='telefono'
+            placeholder="Telefono">
+        </div>
+
+      </div>
+
+      <div class="form-group4">
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label mt-2">Contraseña</label>
+          <input type="password" class="form-control" id="inputValid3" name='clave' placeholder="Contraseña">
+        </div>
+      </div>
+
+      <div class="form-group5">
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label mt-2">Confirma tu contraseña</label>
+          <input type="password" class="form-control" id="inputValid4" name='confirClave' placeholder="Contraseña">
+        </div>
+      </div>
+      <div class="mb-2">
+        <p class="pa">Ya tienes una cuenta?</p> <a href="{{url_for('iniciarsesion')}}" class="aRegister">Iniciar sesión</a>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary">Registrarse</button>
+      </div>
+
+    </form>
+  </div>
 </div>
+
+
+
+<script src="{{ url_for('static', filename='js/validation.js')}}"></script>
+
 
 {% endblock %}
