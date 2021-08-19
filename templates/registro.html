@@ -6,27 +6,54 @@
   .father {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    position: relative;
   }
 
   .child {
-  
+    margin-top: 20px;
     width: 400px;
-    border: rgb(235, 233, 233) solid 2px;
+    border: rgb(52, 73, 94 ) solid 2px;
     padding: 20px;
-    box-shadow: 1px 1px 5px rgb(235, 232, 232);
+    z-index: 10;
+    background-color: rgb(52, 73, 94 );
+    border-radius: 3px;
 
   }
-  .pa{
 
+  .pa {
+
+    color: white;
     display: inline;
+  }
+  .contenedor{
+    background-color: burlywood;
+    position: absolute;
+    z-index: 0;
+  
   }
 </style>
 
 
 <div class="father">
+  <div class="contenedor">
+    <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="{{url_for('static',filename='image1.jpg')}}" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="{{url_for('static',filename='image2.jpg')}}" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="{{url_for('static',filename='image3.jpg')}}" class="d-block w-100" alt="...">
+        </div>
+      </div>
+    
+    </div>
+    
+  </div>
   <div class="child">
-    <h3 class="text-center">CREAR CUENTA</h3>
+    <h3 class="text-center text-light">CREAR CUENTA</h3>
 
     {% with messages = get_flashed_messages(category_filter=['error']) %}
     {% if messages %}
@@ -52,7 +79,7 @@
 
       <div class="form-group1">
         <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label mt-2">Usuario</label>
+          <label for="exampleInputEmail1" class="form-label mt-2 text-light">Usuario</label>
           <input type="text" class="form-control" id="inputValid1" aria-describedby="emailHelp" name='nombre'
             placeholder="Usuario">
         </div>
@@ -62,7 +89,7 @@
 
       <div class="form-group2">
         <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label mt-2">Correo electronico</label>
+          <label for="exampleInputEmail1" class="form-label mt-2 text-light">Correo electronico</label>
           <input type="email" class="form-control" id="inputValid2" aria-describedby="emailHelp" name='email'
             placeholder="Correo Electronico">
         </div>
@@ -70,7 +97,7 @@
       </div>
       <div class="form-group3">
         <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label mt-2">Telefono</label>
+          <label for="exampleInputEmail1" class="form-label mt-2 text-light">Telefono</label>
           <input type="text" class="form-control" id="inputValid2" aria-describedby="emailHelp" name='telefono'
             placeholder="Telefono">
         </div>
@@ -79,21 +106,21 @@
 
       <div class="form-group4">
         <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label mt-2">Contraseña</label>
+          <label for="exampleInputPassword1" class="form-label mt-2 text-light">Contraseña</label>
           <input type="password" class="form-control" id="inputValid3" name='clave' placeholder="Contraseña">
         </div>
       </div>
 
       <div class="form-group5">
         <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label mt-2">Confirma tu contraseña</label>
+          <label for="exampleInputPassword1" class="form-label mt-2 text-light">Confirma tu contraseña</label>
           <input type="password" class="form-control" id="inputValid4" name='confirClave' placeholder="Contraseña">
         </div>
       </div>
       <div class="mb-2">
         <p class="pa">Ya tienes una cuenta?</p> <a href="{{url_for('iniciarsesion')}}" class="aRegister">Iniciar sesión</a>
       </div>
-      <div class="text-center">
+      <div class="text-center text-light">
         <button type="submit" class="btn btn-primary">Registrarse</button>
       </div>
 
