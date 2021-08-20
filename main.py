@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, Response, stream_with_context
-# from flaskext.mysql import MySQL
-# from decouple import config
+from flaskext.mysql import MySQL
+from decouple import config
 import random
 import json
 import time
@@ -13,24 +13,22 @@ from datetime import datetime
 app = Flask(__name__)
 db = SQLAlchemy(app)
 
-
-# mysql = MySQL()
-# app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-# app.config['MYSQL_DATABASE_USER'] = config('USER_DB')
-# app.config['MYSQL_DATABASE_PASSWORD'] = config('PASSWORD_DB')
-# app.config['MYSQL_DATABASE_DB'] = config('NAME_DB')
+mysql = MySQL()
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.config['MYSQL_DATABASE_USER'] = config('USER_DB')
+app.config['MYSQL_DATABASE_PASSWORD'] = config('PASSWORD_DB')
+app.config['MYSQL_DATABASE_DB'] = config('NAME_DB')
+mysql.init_app(app)
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///prueba.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'bx99xa4xa6x1axc9x10irxfexdeex12x0esx98dfsfsdfsdfsd'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:123456@localhost/test'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:1234@localhost/test'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'iniciarsesion' 
-
-# mysql.init_app(app)
 
 
 class usuarios(UserMixin,db.Model):
@@ -47,35 +45,33 @@ class usuarios(UserMixin,db.Model):
 def load_user(user_id):
     return usuarios.query.get(int(user_id))
 
-# def _datos(cur):
+def _datos(cur):
 
-#     cur.execute(
-#         'SELECT fecha1, corriente1, potencia1, consumo1 FROM datos_tiempo_real1 WHERE id = (SELECT MAX(id) FROM datos_tiempo_real1)')
-#     datos_tiempo_real1 = cur.fetchall()
-#     cur.execute(
-#         'SELECT fecha2, corriente2, potencia2, consumo2 FROM datos_tiempo_real2 WHERE id = (SELECT MAX(id) FROM datos_tiempo_real2)')
-#     datos_tiempo_real2 = cur.fetchall()
+    cur.execute(
+        'SELECT fecha1, corriente1, potencia1, consumo1 FROM datos_tiempo_real1 WHERE id = (SELECT MAX(id) FROM datos_tiempo_real1)')
+    datos_tiempo_real1 = cur.fetchall()
+    cur.execute(
+        'SELECT fecha2, corriente2, potencia2, consumo2 FROM datos_tiempo_real2 WHERE id = (SELECT MAX(id) FROM datos_tiempo_real2)')
+    datos_tiempo_real2 = cur.fetchall()
 
-#     json_data = json.dumps({
-#             'fecha1': datos_tiempo_real1[0][0], 'corriente1': datos_tiempo_real1[0][1], 
-#             'potencia1': datos_tiempo_real1[0][2], 'consumo1': datos_tiempo_real1[0][3],
-#             'fecha2': datos_tiempo_real2[0][0], 'corriente2': datos_tiempo_real2[0][1], 
-#             'potencia2': datos_tiempo_real2[0][2], 'consumo2': datos_tiempo_real2[0][3],
-#             'fecha_total': time.strftime("%H: %M: %S"),
-#             'corriente_total': datos_tiempo_real1[0][1] + datos_tiempo_real2[0][1],
-#             'potencia_total': datos_tiempo_real1[0][2] + datos_tiempo_real2[0][2],
-#             'consumo_total': datos_tiempo_real1[0][3] + datos_tiempo_real2[0][3],
-#         })
+    json_data = json.dumps({
+            'fecha1': datos_tiempo_real1[0][0], 'corriente1': datos_tiempo_real1[0][1], 
+            'potencia1': datos_tiempo_real1[0][2], 'consumo1': datos_tiempo_real1[0][3],
+            'fecha2': datos_tiempo_real2[0][0], 'corriente2': datos_tiempo_real2[0][1], 
+            'potencia2': datos_tiempo_real2[0][2], 'consumo2': datos_tiempo_real2[0][3],
+            'fecha_total': time.strftime("%H: %M: %S"),
+            'corriente_total': datos_tiempo_real1[0][1] + datos_tiempo_real2[0][1],
+            'potencia_total': datos_tiempo_real1[0][2] + datos_tiempo_real2[0][2],
+            'consumo_total': datos_tiempo_real1[0][3] + datos_tiempo_real2[0][3],
+        })
  
-#     return f"data:{json_data}\n\n"
+    return f"data:{json_data}\n\n"
 
-# @app.route('/datos_monitoreo')
-# def datos_monitoreo1():
-#     cur = mysql.get_db().cursor()
-
-#     enviar = _datos(cur)
-
-#     return Response(stream_with_context(enviar), mimetype='text/event-stream')   
+@app.route('/datos_monitoreo')
+def datos_monitoreo1():
+    cur = mysql.get_db().cursor()
+    enviar = _datos(cur)
+    return Response(stream_with_context(enviar), mimetype='text/event-stream')   
 
 @app.route('/')
 def login():
